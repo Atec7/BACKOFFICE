@@ -71,14 +71,21 @@
             border-radius: 4px;
             margin-top: 20px;
         }
+        .clock {
+            font-size: 18px;
+            text-align: center;
+            color: black;
+        }
     </style>
 </head>
 
 <body>
     <h2>Atendimento BackOffice <br>Perdas</h2>
+    
     <p id="success-message">Imagem anexada com sucesso!</p>
     <img class="logo" src="img/logo.jpg" alt="">
     <p><b>Grupo Partnership - Rio Verde/GO 2025</b></p>
+    <div class="clock" id="clock"></div>
     <form id="ssos-form">
         <label for="equipe">🚙Equipe:</label>
         <select id="equipe" name="equipe">
@@ -103,7 +110,8 @@
             <option value="1013-Atribuir Alvo SS/OS">1013-Atribuir Alvo SS/OS</option>
             <option value="1014-Soliicitar Criação de Nova SS/OS">1014-Soliicitar Criação de Nova SS/OS</option>
             <option value="1015-Status do Medidor">1015-Status do Medidor</option>
-            <option value="1016-Outra Solicitação">1016-Outra Solicitação</option>
+            <option value="1016-Retirar Atribuição e Atribuir Novamente">1016-Retirar Atribuição e Atribuir Novamente</option>
+            <option value="1017-Outra Solicitação">1017-Outra Solicitação</option>
         </select>
 
         <label for="fotos">📷Tirar Foto:</label>
@@ -138,7 +146,7 @@
             var fotos = document.getElementById('fotos').files;
             var printes = document.getElementById('printes').files;
 
-            var linkBase = 'https://api.whatsapp.com/send?phone=5564996151084&text=' +
+            var linkBase = 'https://api.whatsapp.com/send?phone=GzCwk3dWg8t7dGDuILykCB&text=' +
                 'Equipe: ' + equipe + '%0A' +
                 'Solicitação: ' + solicitacao + '%0A' +
                 'Observação: ' + observacao;
@@ -156,7 +164,7 @@
                             var descricaoImagem = 'Equipe: ' + equipe + '\n' +
                                                   'Solicitação: ' + solicitacao + '\n' +
                                                   'Observação: ' + observacao;
-                            var imageUrl = 'https://api.imgbb.com/1/upload?key=a8a38c3afbdf5e80eb93015cc9d5e8ff&name=' + encodeURIComponent(descricaoImagem);  // Sua chave de API
+                            var imageUrl = 'https://api.imgbb.com/1/upload?key=a8a38c3afbdf5e80eb93015cc9d5e8ff&name=' + encodeURIComponent(descricaoImagem); 
 
                             var formData = new FormData();
                             formData.append('image', base64Image);
@@ -199,6 +207,21 @@
                 window.open(linkBase, '_blank');
             }
         }
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds}`;
+            
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const dateString = now.toLocaleDateString('pt-BR', options);
+            
+            document.getElementById('clock').textContent = `${dateString} ${timeString}`;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
     </script>
 </body>
 </html>
