@@ -71,6 +71,11 @@
             border-radius: 4px;
             margin-top: 20px;
         }
+        .clock {
+            font-size: 14px;
+            text-align: center;
+            color: white;
+        }
     </style>
 </head>
 
@@ -78,6 +83,7 @@
     <h2>Reportar Um Problema <br>BackOffice Perdas</h2><h2>⚠</h2>
     <img class="logo" src="img/logo.jpg" alt="">
     <p><b>Grupo Partnership - Rio Verde/GO 2025</b></p>
+    <div class="clock" id="clock"></div>
     <p id="success-message">Imagem anexada com sucesso!</p>
     <form id="ssos-form">
         <label for="equipe">🚙Equipe:</label>
@@ -196,6 +202,21 @@
                 window.open(linkBase, '_blank');
             }
         }
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timeString = `${hours}:${minutes}:${seconds}`;
+            
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const dateString = now.toLocaleDateString('pt-BR', options);
+            
+            document.getElementById('clock').textContent = `${dateString} ${timeString}`;
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
     </script>
 </body>
 </html>
