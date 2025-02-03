@@ -17,10 +17,13 @@
             text-align: center;
             font-family: Arial, Helvetica, sans-serif;
         }
-        p{
-            color:  white;
+        p {
+            color: white;
             text-align: center;
-
+        }
+        a {
+            text-decoration: none;
+            color: white;
         }
         form {
             background: #fff;
@@ -51,22 +54,31 @@
         button:hover {
             background: green;
         }
-
         .logo {
-  display: block;
-  margin: 0 auto;
-  border-radius: 50%;
-  border-style: solid;
-  color: white;
-  padding: 50px white;
-}
+            display: block;
+            margin: 0 auto;
+            border-radius: 50%;
+            border-style: solid;
+            color: white;
+            padding: 50px white;
+        }
+        #success-message {
+            display: none;
+            color: white;
+            background-color: green;
+            padding: 10px;
+            text-align: center;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 
 <body>
-    <h2>Reportar Um Problema BackOffice <br>Perdas</h2>
+    <h2>Reportar Um Problema <br>BackOffice Perdas</h2><h2>⚠</h2>
     <img class="logo" src="img/logo.jpg" alt="">
-    <p><B>Grupo Partnership - Rio Verde/GO 2025</B></p>
+    <p><b>Grupo Partnership - Rio Verde/GO 2025</b></p>
+    <p id="success-message">Imagem anexada com sucesso!</p>
     <form id="ssos-form">
         <label for="equipe">🚙Equipe:</label>
         <select id="equipe" name="equipe">
@@ -87,25 +99,35 @@
         <select id="solicitacao" name="solicitacao">
             <option value="2020-Problema na Abertura de Turno">2020-Problema na Abertura de Turno⚠</option>
             <option value="2021-SS Não Caiu Para Minha Equipe">2021-SS Não Caiu Para Minha Equipe⚠</option>
-            <option value="2022-Não Estou Conseguindo Lançar Serviços No Jupiter">2022-Não Estou Conseguindo Lançar Serviços No Jupiter⚠</option>
+            <option value="2022-Não Consigo Lançar Serviços No Jupiter">2022-Não Consigo Lançar Serviços No Jupiter⚠</option>
             <option value="2023-Problema no Fechamento de Turno">2023-Problema no Fechamento de Turno</option>
             <option value="2023-Outro Problema">2023-Outro Problema</option>
-            
         </select>
 
         <label for="fotos">📷Tirar Foto:</label>
-        <input type="file" id="fotos" name="fotos" accept="image/*" multiple capture="camera">
+        <input type="file" id="fotos" name="fotos" accept="image/*" multiple capture="camera" onchange="exibirMensagemSucesso()">
 
-        <label for="printes">📱Anexar Printe:</label>
-        <input type="file" id="printes" name="printes" accept="image/*" multiple>
+        <label for="printes">📱Anexar Print:</label>
+        <input type="file" id="printes" name="printes" accept="image/*" multiple onchange="exibirMensagemSucesso()">
 
         <label for="observacao">✍🏻Observação:</label>
         <textarea id="observacao" name="observacao" rows="4" cols="50"></textarea>
 
-        <button type="button" onclick="enviarWhatsApp()">Reportar Problema</button>
+        <button type="button" onclick="enviarWhatsApp()">Reportar Problema <b>↗</b></button>
     </form>
-
+    <br>
+    <button>
+        <a href="index.html"> <b>⬅Voltar ao Painel de Solicitações</b></a>
+    </button>
     <script>
+        function exibirMensagemSucesso() {
+            var successMessage = document.getElementById('success-message');
+            successMessage.style.display = 'block';
+            setTimeout(function() {
+                successMessage.style.display = 'none';
+            }, 2000);
+        }
+
         function enviarWhatsApp() {
             var equipe = document.getElementById('equipe').value;
             var solicitacao = document.getElementById('solicitacao').value;
@@ -128,7 +150,10 @@
                     reader.onload = (function(readerIndex) {
                         return function(e) {
                             var base64Image = e.target.result.split(',')[1];
-                            var imageUrl = 'https://api.imgbb.com/1/upload?key=a8a38c3afbdf5e80eb93015cc9d5e8ff';  // Sua chave de API
+                            var descricaoImagem = 'Equipe: ' + equipe + '\n' +
+                                                  'Solicitação: ' + solicitacao + '\n' +
+                                                  'Observação: ' + observacao;
+                            var imageUrl = 'https://api.imgbb.com/1/upload?key=a8a38c3afbdf5e80eb93015cc9d5e8ff&name=' + encodeURIComponent(descricaoImagem);  // Sua chave de API
 
                             var formData = new FormData();
                             formData.append('image', base64Image);
@@ -144,6 +169,7 @@
                                     arquivosEnviados++;
                                     if (arquivosEnviados === totalArquivos) {
                                         callback(urls);
+                                        exibirMensagemSucesso();
                                     }
                                 } else {
                                     throw new Error('Erro ao receber URL da imagem.');
